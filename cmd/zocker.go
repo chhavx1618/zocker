@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/exec"
 	"syscall"
+	//"path/filepath"
 
 	"github.com/urfave/cli/v2"
 )
@@ -47,6 +48,11 @@ func main() {
 					cmd := c.Args().First()
 					args := c.Args().Slice()[1:]
 
+					containerDir := "/tmp/mycontainer"
+					if _, err := os.Stat(containerDir); os.IsNotExist(err) {
+						return fmt.Errorf("container dir does not exist %s", containerDir)
+					}
+
 					// Create and configure the process
 					process := exec.Command(cmd, args...)
 					process.Stdout = os.Stdout
@@ -59,6 +65,17 @@ func main() {
 						syscall.CLONE_NEWNS |
 						syscall.CLONE_NEWIPC,
 					}
+
+					//container env
+
+					process.SysProcAttr.Credential = &syscall.Credential{
+						Uid: uint32(os.Getuid()),
+                        Gid: uint32(os.Getgid()),
+					}
+
+					//changing the root filesystem
+					process.SysProcAttr.Chroot = containerDir
+					process.Dir = "/"
 
 					// Run the command
 					err := process.Run()

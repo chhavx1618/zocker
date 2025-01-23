@@ -58,3 +58,13 @@ Increasing the isolation of the containers, we've now moved on to isolating serv
 We've seperated them by using a bitwise OR. You can check the isolation by running `ps aux` for PID.
 
 ### Step 6
+
+It's time for filesystel isolation.
+
+Docker uses a sort of virtual filesystem, where multiple files are stored in a single location, overlayed on each other. In this manner, the container only takes up on location, and all its contents are stored in it. 
+
+In linux, we can achieve this by using `chroot` tool. 
+
+We are going to create a snapshot of the Btrfs volume (Btrfs (B-tree file system) is a file system for Linux that's designed for large storage systems), and this will act is the container's isolated root file system.
+
+Note that we have added a new import.
