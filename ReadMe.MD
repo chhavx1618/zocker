@@ -4,8 +4,15 @@ A simple docker implementation in Go for learning purposes.
 ## Follow along
 
 ### Step 1
+First, start a Go project. Create a go mod file, a cmd folder which will contain the zocker.go file. 
+
+To zocker.go, add the most basic imports - fmt & OS, since we will be using all sorts of OS functionalities. 
+
+I've also added _ import, because it is a really cool way to make cli apps, and it's easy to use as well.
 
 ### Step 2
+
+Now, let's write the most basic code of zocker. 
 
 ### Step 3
 Next, we've added a Create command for creating a container. Giving the container a name is mandatory, otherwise our code returns an error. We;ve defined the directory for the container, being "/tmp/%s". Using the OS package, we create that directory and give it the permission 0755.
@@ -39,3 +46,15 @@ Now when we use the run command, the host is isolated from the main host (our PC
 
 
 ### Step 5
+Increasing the isolation of the containers, we've now moved on to isolating serveral other namespaces - Process ID, Mount, and IPC (inter-process communication),
+
+	`process.SysProcAttr = &syscall.SysProcAttr{
+							Cloneflags: syscall.CLONE_NEWUTS |
+							syscall.CLONE_NEWPID |
+							syscall.CLONE_NEWNS |
+							syscall.CLONE_NEWIPC,
+						}`
+
+We've seperated them by using a bitwise OR. You can check the isolation by running `ps aux` for PID.
+
+### Step 6

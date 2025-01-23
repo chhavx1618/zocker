@@ -54,7 +54,10 @@ func main() {
 					process.Stderr = os.Stderr
 
 					process.SysProcAttr = &syscall.SysProcAttr{
-						Cloneflags: syscall.CLONE_NEWUTS,
+						Cloneflags: syscall.CLONE_NEWUTS |
+						syscall.CLONE_NEWPID |
+						syscall.CLONE_NEWNS |
+						syscall.CLONE_NEWIPC,
 					}
 
 					// Run the command
